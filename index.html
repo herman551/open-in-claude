@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Open in Claude</title>
+<style>
+:root { color-scheme: light dark; }
+body { font: 16px/1.5 system-ui, -apple-system, sans-serif; max-width: 34rem; margin: 18vh auto 0; padding: 0 20px; }
+a.go { display: inline-block; margin-top: 12px; padding: 10px 20px; border-radius: 999px; background: #1f6f8b; color: #fff; text-decoration: none; font-weight: 600; }
+p.q { white-space: pre-wrap; opacity: 0.75; font-size: 0.9em; border-left: 3px solid #1f6f8b; padding-left: 12px; }
+</style>
+</head>
+<body>
+<h1>Open in Claude</h1>
+<p id="say">This page hands a prompt to the Claude desktop app. It needs a link that carries one.</p>
+<p class="q" id="q" hidden></p>
+<a class="go" id="go" hidden>Open in Claude</a>
+<script>
+// Published copy of ~/Developer/project-watch/bounce.html. A web page cannot be told
+// to open an app from inside a claude.ai Artifact, so Project Watch links here and this
+// page passes the folder and the prompt on. Both ride after the # and never reach the
+// server. Only those two values are passed, and only to claude://code/new: the app asks
+// before it opens the folder and never sends the prompt by itself.
+(function () {
+	var given = new URLSearchParams(location.hash.slice(1));
+	var q = given.get("q");
+	var folder = given.get("folder");
+	if (!q) return;
+	var out = new URLSearchParams();
+	if (folder) out.set("folder", folder);
+	out.set("q", q);
+	var link = "claude://code/new?" + out.toString().replace(/\+/g, "%20");
+	var go = document.getElementById("go");
+	go.href = link;
+	go.hidden = false;
+	document.getElementById("say").textContent = "Opening a new Claude Code session" + (folder ? " in " + folder : "") + ". If nothing happens, press the button. You can close this tab afterwards.";
+	var shown = document.getElementById("q");
+	shown.textContent = q;
+	shown.hidden = false;
+	location.href = link;
+})();
+</script>
+</body>
+</html>
